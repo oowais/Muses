@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# encoding: utf-8
 import librosa
 from numpy import random
 import numpy
