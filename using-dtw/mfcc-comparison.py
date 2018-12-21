@@ -50,8 +50,8 @@ if __name__ == '__main__':
     dist, cost, accumulated_cost, path = dtw.dtw(mfcc1.T, mfcc2.T, dist_func)
     print("Normalized distance between " + file1 + " and " + file2 + " : ", dist)
 
-    # plt.figure(num='Comparison graph')
-    # plt.imshow(cost.T, origin='lower', cmap=plt.get_cmap('gray'), interpolation='nearest')
-    # plt.plot(path[0], path[1], 'w')  # creating plot for DTW
-    #
-    # plt.show()  # To display the plots graphically
+    plt.figure(num='Comparison graph')
+    plt.imshow(cost.T, origin='lower', cmap=plt.get_cmap('gray'), interpolation='nearest')
+    plt.plot(path[0], path[1], 'w')  # creating plot for DTW
+
+    plt.show()  # To display the plots graphically
