@@ -10,7 +10,8 @@ Comparing audio using LSH and mfcc and more
 | nltk | `pip install nltk` |dtw |
 | Microsoft Visual C++ 14.0 is required |  https://visualstudio.microsoft.com/downloads/ | Madmom |
 
-Other dependencies will be installed automatically
+Other dependencies should be installed automatically, if some error occurs with missing dependency, try installing it with  
+`pip install module-name`
 
 ## Problems with importing librosa
 ### Test if librosa installed installed properly. 
