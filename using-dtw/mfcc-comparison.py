@@ -52,13 +52,13 @@ if __name__ == '__main__':
     time1 = time.time()
     dist, cost, accumulated_cost, path = dtw.dtw(mfcc1.T, mfcc2.T, dist_func)
     time2 = time.time()
-    print("Normalized distance between " + file1 + " and " + file2 + " : ", dist)
+    print("Normalized distance between " + file1 + " and " + file2 + ": ", dist)
     print('Time calculated to calculate: ', time2-time1)
 
     time1 = time.time()
-    distance, path = fastdtw.dtw(mfcc1.T, mfcc2.T, dist_func)
+    distance, new_path = fastdtw.dtw(mfcc1.T, mfcc2.T, dist_func)
     time2 = time.time()
-    print("Normalized distance between " + file1 + " and " + file2 + " : ", distance)
+    print("Normalized distance between " + file1 + " and " + file2 + ": ", distance)
     print('Time calculated to calculate: ', time2-time1)
 
     plt.figure(num='Comparison graph')
