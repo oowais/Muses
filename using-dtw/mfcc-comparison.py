@@ -2,6 +2,8 @@ import librosa
 import matplotlib.pyplot as plt
 from dtw import dtw
 from scipy.spatial.distance import euclidean
+import time
+import fastdtw
 
 
 mfcc1: any
@@ -47,8 +49,17 @@ if __name__ == '__main__':
     dist_func = euclidean
 
     print('Calculating distance..')
+    time1 = time.time()
     dist, cost, accumulated_cost, path = dtw.dtw(mfcc1.T, mfcc2.T, dist_func)
+    time2 = time.time()
     print("Normalized distance between " + file1 + " and " + file2 + " : ", dist)
+    print('Time calculated to calculate: ', time2-time1)
+
+    time1 = time.time()
+    distance, path = fastdtw.dtw(mfcc1.T, mfcc2.T, dist_func)
+    time2 = time.time()
+    print("Normalized distance between " + file1 + " and " + file2 + " : ", distance)
+    print('Time calculated to calculate: ', time2-time1)
 
     plt.figure(num='Comparison graph')
     plt.imshow(cost.T, origin='lower', cmap=plt.get_cmap('gray'), interpolation='nearest')
