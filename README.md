@@ -45,3 +45,4 @@ Error should be resolved now.
 - Store Audio data like features in database
 - Load audio from youtube
 - Able to tell which song to pick from youtube
+- Way to cluster close audio
