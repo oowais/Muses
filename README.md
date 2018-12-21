@@ -8,6 +8,7 @@ Comparing audio using LSH and mfcc and more
 | matplotlib  | `pip install matplotlib`  | mfcc-comparison |
 | Dtw | `pip install dtw` or<br/> `python -m pip install dtw` | mfcc-comparison |
 | nltk | `pip install nltk` |dtw |
+| Microsoft Visual C++ 14.0 is required |  https://visualstudio.microsoft.com/downloads/ | Madmom |
 
 Other dependencies will be installed automatically
 
