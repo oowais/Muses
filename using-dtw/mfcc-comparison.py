@@ -4,15 +4,20 @@ from dtw import dtw
 from scipy.spatial.distance import euclidean
 
 if __name__ == '__main__':
-    # Loading audio files
     file1 = 'blues0.mp3'
     file2 = 'rock1.mp3'
 
+    # Loading audio files
     y1, sr1 = librosa.load('../audio-resources/' + file1)
     y2, sr2 = librosa.load('../audio-resources/' + file2)
 
-    mfcc1 = librosa.feature.mfcc(y1, sr1, n_mfcc=2)
-    mfcc2 = librosa.feature.mfcc(y2, sr2, n_mfcc=2)
+    # Calculating their mfcc feature
+    mfcc1 = librosa.feature.mfcc(y1, sr1, n_mfcc=20)
+    mfcc2 = librosa.feature.mfcc(y2, sr2, n_mfcc=20)
+
+    # Getting frames from audio
+    fs1 = librosa.util.frame(y1, frame_length=2048, hop_length=64)
+    fs2 = librosa.util.frame(y2, frame_length=2048, hop_length=64)
 
     # Showing multiple plots in same figure using subplot
     plt.subplot(1, 2, 1)
@@ -33,7 +38,7 @@ if __name__ == '__main__':
 
     dist_func = euclidean
 
-    dist, cost, path = dtw.dtw(mfcc1.T, mfcc2.T, dist_func)
+    dist, cost, accumulated_cost, path = dtw.dtw(mfcc1.T, mfcc2.T, dist_func)
     print("The normalized distance between the two : ", dist)  # 0 for similar audios
 
     plt.figure()
