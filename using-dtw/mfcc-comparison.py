@@ -6,8 +6,8 @@ from dtw import dtw
 if __name__ == '__main__':
 
     # Loading audio files
-    y1, sr1 = librosa.load('audio_resources/blues0.mp3')
-    y2, sr2 = librosa.load('audio_resources/blues1.mp3')
+    y1, sr1 = librosa.load('../audio-resources/blues0.mp3')
+    y2, sr2 = librosa.load('../audio-resources/blues1.mp3')
 
     # Showing multiple plots using subplot
     plt.subplot(1, 2, 1)
@@ -18,7 +18,12 @@ if __name__ == '__main__':
     mfcc2 = librosa.feature.mfcc(y2, sr2)
     # librosa.display.specshow(mfcc2)
 
-    dist, cost, path = dtw(mfcc1.T, mfcc2.T)
+    from sklearn.metrics.pairwise import euclidean_distances, manhattan_distances
+    from nltk.metrics.distance import edit_distance
+
+    dist_fun = euclidean_distances
+
+    dist, cost, path = dtw(mfcc1.T, mfcc2.T, dist_fun)
     print("The normalized distance between the two : ",dist)   # 0 for similar audios
 
     plt.imshow(cost.T, origin='lower', cmap=plt.get_cmap('gray'), interpolation='nearest')
