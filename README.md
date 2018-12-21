@@ -39,3 +39,8 @@ After installing open python shell again and try to import librosa
 Error should be resolved now.
 
 >Note: This installation of dependencies are done only using pip and not conda.
+
+##Future prosects
+Store Audio data like features in database
+Load audio from youtube
+Able to tell which song to pick from youtube
