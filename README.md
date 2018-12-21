@@ -9,6 +9,7 @@ Comparing audio using LSH and mfcc and more
 | Dtw | `pip install dtw` or<br/> `python -m pip install dtw` | mfcc-comparison |
 | nltk | `pip install nltk` |dtw |
 | Microsoft Visual C++ 14.0 is required |  https://visualstudio.microsoft.com/downloads/ | Madmom |
+| fastdtw | `pip install fastdtw` | |
 
 Other dependencies should be installed automatically, if some error occurs with missing dependency, try installing it with  
 `pip install module-name`
