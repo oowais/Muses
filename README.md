@@ -2,14 +2,12 @@
 Comparing audio using LSH and mfcc and more
 
 ## Dependencies
-| Dependency  | Command | Required For |
-| :-----------: | :------- | ------------ |
-| Librosa | `pip install librosa`  | All |
-| matplotlib  | `pip install matplotlib`  | mfcc-comparison |
-| Dtw | `pip install dtw` or<br/> `python -m pip install dtw` | mfcc-comparison |
-| nltk | `pip install nltk` |dtw |
-| Microsoft Visual C++ 14.0 is required |  https://visualstudio.microsoft.com/downloads/ | Madmom |
-| fastdtw | `pip install fastdtw` | |
+| Dependency  | Command | 
+| :-----------: | :------- |
+| Librosa | `pip install librosa`  |
+| matplotlib  | `pip install matplotlib`  |
+| Dtw | `pip install dtw` or<br/> `python -m pip install dtw` | 
+| fastdtw | `pip install fastdtw` |
 
 Other dependencies should be installed automatically, if some error occurs with missing dependency, try installing it with  
 `pip install module-name`
