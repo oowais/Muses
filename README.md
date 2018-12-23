@@ -30,7 +30,7 @@ Then **uninstall numpy** using
 `pip uninstall nimpy`
 
 **Download numpy+mkl** wheel from the following site: [Python libs](https://www.lfd.uci.edu/~gohlke/pythonlibs/)
->Download the latest version according to your system requirements
+>Download the latest version
 
 After installing open python shell again and try to import librosa
 `import librosa`
