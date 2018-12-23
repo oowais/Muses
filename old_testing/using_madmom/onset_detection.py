@@ -6,7 +6,7 @@ from scipy.ndimage.filters import maximum_filter
 
 # Comparison of SuperFlux function to normal spectral flux for beat detection
 def main():
-    spec = madmom.audio.spectrogram.Spectrogram('../audio-resources/rock4.mp3', num_channels=1)
+    spec = madmom.audio.spectrogram.Spectrogram('../../audio_resources/rock4.mp3', num_channels=1)
 
     # calculate the difference
     diff = np.diff(spec, axis=0)

@@ -29,8 +29,8 @@ if __name__ == '__main__':
     file2 = 'metal0.mp3'
 
     # Loading audio files
-    y1, sr1 = librosa.load('../audio-resources/' + file1)
-    y2, sr2 = librosa.load('../audio-resources/' + file2)
+    y1, sr1 = librosa.load('../../audio_resources/' + file1)
+    y2, sr2 = librosa.load('../../audio_resources/' + file2)
     print('Audio files loaded', file1, " ", file2)
 
     # Calculating mfcc feature

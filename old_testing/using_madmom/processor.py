@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-audiofile = '../audio-resources/rock4.mp3'
+audiofile = '../../audio_resources/rock4.mp3'
 
 
 class BetterSuperFluxProcessing(object):

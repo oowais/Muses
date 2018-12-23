@@ -103,7 +103,7 @@ class MusicSearch:
 
 
 if __name__ == '__main__':
-    training_dir = 'audio_resources/'
+    training_dir = '../../audio_resources/'
     training_files = [os.path.join(training_dir, f) for f in os.listdir(training_dir)]
     bool2int([False, True, False, True])
 
@@ -116,7 +116,7 @@ if __name__ == '__main__':
     ms.train()
 
     print('Querying with test file')
-    test_file = 'test/metal0.mp3'
+    test_file = '../../audio_resources/metal0.mp3'
     results = ms.query(test_file)
 
     for r in sorted(results, key=results.get, reverse=True):

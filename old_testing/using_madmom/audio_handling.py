@@ -7,7 +7,7 @@ def main():
     # signal, sample_rate = madmom.audio.signal.load_audio_file('../audio-resources/blues0.mp3')
 
     # lead audio file class level
-    signal2 = madmom.audio.signal.Signal('../audio-resources/blues1.mp3', num_channels=1)
+    signal2 = madmom.audio.signal.Signal('../../audio_resources/blues1.mp3', num_channels=1)
 
     # load audio file using new methodology
     # signal3 = madmom.io.audio.Signal('../audio-resources/blues2.mp3')
