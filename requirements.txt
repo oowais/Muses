@@ -1,3 +1,4 @@
 dtw
 fastdtw
 librosa
+matplotlib

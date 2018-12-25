@@ -4,17 +4,6 @@ Comparing audio using LSH and mfcc and more
 ## Setup
 `pip3 install -r requirements.txt`
 
-## Dependencies
-| Dependency  | Command | 
-| :-----------: | :------- |
-| Librosa | `pip install librosa`  |
-| matplotlib  | `pip install matplotlib`  |
-| Dtw | `pip install dtw` or<br/> `python -m pip install dtw` | 
-| fastdtw | `pip install fastdtw` |
-
-Other dependencies should be installed automatically, if some error occurs with missing dependency, try installing it with  
-`pip install module-name`
-
 ## Problems with importing librosa
 ### Test if librosa installed installed properly. 
 Open a python shell and type the following command  
@@ -48,3 +37,14 @@ Error should be resolved now.
 - Load audio from youtube
 - Able to tell which song to pick from youtube
 - Way to cluster close audio
+
+## Dependencies
+| Dependency  | Command |
+| :-----------: | :------- |
+| Librosa | `pip install librosa`  |
+| matplotlib  | `pip install matplotlib`  |
+| Dtw | `pip install dtw` or<br/> `python -m pip install dtw` |
+| fastdtw | `pip install fastdtw` |
+
+Other dependencies should be installed automatically, if some error occurs with missing dependency, try installing it with  
+`pip install module-name`
