@@ -5,8 +5,8 @@ import os
 # download database browser and check if tables are shown properly
 # calculate hash of audio and compare
 def main():
-    # db = os.path.abspath(os.path.join(os.path.dirname(__file__)))
-    db = Db(storage_file=os.path.abspath(os.path.join(os.path.dirname(__file__), 'database/db.sqlite')))
+    database_name = 'db.sqlite'
+    db = Db(storage_file=os.path.abspath(os.path.join(os.path.dirname(__file__), database_name)))
     print(db.create_tables())
 
 
