@@ -1,6 +1,9 @@
 # Audio-Comparison
 Comparing audio using LSH and mfcc and more
 
+## Setup
+`pip3 install -r requirements.txt`
+
 ## Dependencies
 | Dependency  | Command | 
 | :-----------: | :------- |
