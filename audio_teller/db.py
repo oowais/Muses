@@ -59,3 +59,6 @@ class Db:
             self.logger.error(e)
             return False
         return True
+
+    def save_song(self):
+        
