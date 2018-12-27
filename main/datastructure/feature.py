@@ -1,58 +1,58 @@
 class Feature:
 
-    def __init__(self, hash1=None, hash2=None, mfcc_dist=None, chroma_cens_dist=None, chroma_stf_dist=None,
-                 mel_dist=None, tonnetz_dist=None, rhythm_dist=None):
+    def __init__(self, name=None, hash=None, mfcc=None, chroma_cens=None, chroma_stft=None, mel=None, tonnetz=None,
+                 rhythm=None):
         """Constructor for Song data class
 
         Parameters
         ----------
-        hash1: hash of 1st audio
-        hash2: hash of 2nd audio
-        mfcc_dist: feautre
-        chroma_cens_dist: feature
-        chroma_stf_dist: feature
-        mel_dist: feature
-        tonnetz_dist: feature
-        rhythm_dist: feature
+        name: name of audio
+        hash: hash of audio
+        mfcc: feautre
+        chroma_cens: feature
+        chroma_stf: feature
+        mel: feature
+        tonnetz: feature
+        rhythm: feature
 
         """
-        self._hash1 = hash1
-        self._hash2 = hash2
-        self._mfcc_dist = mfcc_dist
-        self._chroma_cens_dist = chroma_cens_dist
-        self._chroma_stf_dist = chroma_stf_dist
-        self._mel_dist = mel_dist
-        self._tonnetz_dist = tonnetz_dist
-        self._rhythm_dist = rhythm_dist
+        self._name = name
+        self._hash = hash
+        self._mfcc = mfcc
+        self._chroma_cens = chroma_cens
+        self._chroma_stft = chroma_stft
+        self._mel = mel
+        self._tonnetz = tonnetz
+        self._rhythm = rhythm
 
     @property
-    def hash1(self):
-        return self._hash1
+    def name(self):
+        return self._name
 
     @property
-    def hash2(self):
-        return self._hash2
+    def hash(self):
+        return self._hash
 
     @property
-    def mfcc_dist(self):
-        return self._mfcc_dist
+    def mfcc(self):
+        return self._mfcc
 
     @property
-    def chroma_cens_dist(self):
-        return self._chroma_cens_dist
+    def chroma_cens(self):
+        return self._chroma_cens
 
     @property
-    def chroma_stf_dist(self):
-        return self._chroma_stf_dist
+    def chroma_stft(self):
+        return self._chroma_stft
 
     @property
-    def mel_dist(self):
-        return self._mel_dist
+    def mel(self):
+        return self._mel
 
     @property
-    def tonnetz_dist(self):
-        return self._tonnetz_dist
+    def tonnetz(self):
+        return self._tonnetz
 
     @property
-    def rhythm_dist(self):
-        return self._rhythm_dist
+    def rhythm(self):
+        return self._rhythm

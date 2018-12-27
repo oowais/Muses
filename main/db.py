@@ -3,7 +3,6 @@ import logging
 import numpy
 
 
-# TODO: change the structure of distance table to have the factors value also
 # TODO: add a new table for storing highest and lowest value of all the features
 # TODO: add a method to factorize the values
 # TODO: create update_tables() method which might be used later on
@@ -27,6 +26,7 @@ class Db:
         self.open_connection(db_file=storage_file)
         self.distance_table = 'distance'
         self.song_table = 'song'
+        self.extreme_distance_table = 'extreme_distance'
 
     def open_connection(self, db_file):
         """Create a database connection to SQLite database file provided
@@ -51,15 +51,25 @@ class Db:
         #                     "name text NOT NULL, mfcc BLOB, chroma_cens BLOB, chroma_stf BLOB, mel BLOB," \
         #                     "tonnetz BLOB, rhythm BLOB)".format(self.song_table)
 
-        create_feature_table = "CREATE TABLE IF NOT EXISTS {} (hash1 text NOT NULL, hash2 text " \
-                               "NOT NULL, mfcc_dist real, chroma_cens_dist real, chroma_stf_dist real, mel_dist real," \
-                               "tonnetz_dist real, rhythm_dist real, PRIMARY KEY (hash1, hash2))" \
+        create_distance_table = "CREATE TABLE IF NOT EXISTS {} (" \
+                                "hash1 text NOT NULL, hash2 text NOT NULL, " \
+                                "mfcc_dist real, mfcc_dist_factor real, " \
+                                "chroma_cens_dist real, chroma_cens_dist_factor real, " \
+                                "chroma_stf_dist real, chroma_stf_dist_factor real," \
+                                "mel_dist real, mel_dist_factor real, " \
+                                "tonnetz_dist real, tonnetz_dist_factor real," \
+                                "rhythm_dist real, rhythm_dist_factor real" \
+                                "PRIMARY KEY (hash1, hash2))" \
             .format(self.distance_table)
+
+        create_max_distance_table = "CREATE TABLE IF NOT EXISTS {} (feature PRIMARY KEY, min_distance REAL NOT NUll," \
+                                    "max_distance REAL NOT NULL)".format(self.extreme_distance_table)
 
         try:
             self.open_connection(db_file=self.db_file)
             # self.cursor.execute(create_song_table)
-            self.cursor.execute(create_feature_table)
+            self.cursor.execute(create_distance_table)
+            self.cursor.execute(create_max_distance_table)
 
             self.conn.commit()
             self.conn.close()
@@ -68,14 +78,12 @@ class Db:
             return False
         return True
 
-    def save_feature_distances(self, feature):
+    def save_feature_distances(self, dist_obj):
         """Saves the song name and its hash to table
 
         Parameters
         ----------
-        song1: Song class
-        song2: Song class
-        feature: Feature class
+        distance_object: distance class object
 
         Returns
         -------
@@ -86,8 +94,8 @@ class Db:
         # insert_into_song_table = "INSERT INTO {} (hash, name, mfcc, chroma_cens, chroma_stf, mel, tonnetz, rhythm) " \
         #                          "VALUES (?,?,?,?,?,?,?,?)".format(self.song_table)
 
-        insert_into_feature_table = "INSERT INTO {} (hash1, hash2, mfcc_dist, chroma_cens_dist, chroma_stf_dist," \
-                                    "mel_dist, tonnetz_dist, rhythm_dist) VALUES (?,?,?,?,?,?,?,?)" \
+        insert_into_distance_table = "INSERT INTO {} (hash1, hash2, mfcc_dist, chroma_cens_dist, chroma_stf_dist," \
+                                     "mel_dist, tonnetz_dist, rhythm_dist) VALUES (?,?,?,?,?,?,?,?)" \
             .format(self.distance_table)
 
         try:
@@ -107,10 +115,10 @@ class Db:
             #                                              numpy.ndarray.tobytes(song2.tonnetz),
             #                                              numpy.ndarray.tobytes(song2.rhythm)))
 
-            self.cursor.execute(insert_into_feature_table, (feature.hash1, feature.hash2, feature.mfcc_dist,
-                                                            feature.chroma_cens_dist, feature.chroma_stf_dist,
-                                                            feature.mel_dist, feature.tonnetz_dist,
-                                                            feature.rhythm_dist))
+            self.cursor.execute(insert_into_distance_table, (dist_obj.hash1, dist_obj.hash2, dist_obj.mfcc_dist,
+                                                             dist_obj.chroma_cens_dist, dist_obj.chroma_stf_dist,
+                                                             dist_obj.mel_dist, dist_obj.tonnetz_dist,
+                                                             dist_obj.rhythm_dist))
 
             self.conn.commit()
             self.conn.close()
@@ -119,6 +127,9 @@ class Db:
             self.conn.close()
             return False
         return True
+
+    # TODO
+    # def update_extreme_distance(self, mfccmin, mfccmax, ):
 
     def delete_tables(self):
         delete_song_table = 'DROP TABLE ' + self.song_table
@@ -172,8 +183,25 @@ class Db:
                 distances = self.cursor.fetchall()
             self.conn.close()
         except sqlite3.Error as e:
-            self.logger.error('Error in fetching song data', str(e.args[0]))
+            self.logger.error('Error in fetching from distance table', str(e.args[0]))
             self.conn.close()
             return None
         return distances
 
+    def get_extreme_distances(self):
+        """
+        Returns the min and max distances of all the feautures
+
+        :return:
+        """
+        get_extreme_distances = "SELECT * FROM {}".format(self.extreme_distance_table)
+        try:
+            self.open_connection(db_file=self.db_file)
+            self.cursor.execute(get_extreme_distances)
+            data = self.cursor.fetchall()
+            self.conn.close()
+        except sqlite3.Error as e:
+            self.logger.error('Error in fetching from extreme distance table', str(e.args[0]))
+            self.conn.close()
+            return None
+        return data
