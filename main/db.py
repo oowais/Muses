@@ -58,7 +58,7 @@ class Db:
                                 "chroma_stf_dist real, chroma_stf_dist_factor real," \
                                 "mel_dist real, mel_dist_factor real, " \
                                 "tonnetz_dist real, tonnetz_dist_factor real," \
-                                "rhythm_dist real, rhythm_dist_factor real" \
+                                "rhythm_dist real, rhythm_dist_factor real," \
                                 "PRIMARY KEY (hash1, hash2))" \
             .format(self.distance_table)
 
@@ -74,7 +74,8 @@ class Db:
             self.conn.commit()
             self.conn.close()
         except sqlite3.Error as e:
-            self.logger.error(e)
+            self.logger.error("Error in creating table: " + str(e.args[0]))
+            self.conn.close()
             return False
         return True
 
@@ -83,7 +84,7 @@ class Db:
 
         Parameters
         ----------
-        distance_object: distance class object
+        dist_obj: distance class object
 
         Returns
         -------
@@ -128,8 +129,62 @@ class Db:
             return False
         return True
 
-    # TODO
-    # def update_extreme_distance(self, mfccmin, mfccmax, ):
+    def set_initial_extreme_distance(self, min_feature, max_feature):
+        """
+        Update the table with min and max features values initially
+
+        :param min_feature:
+        :param max_feature:
+        :return:
+        """
+        insert_into_extreme_distance = 'INSERT INTO {} (feature, min_distance, max_distance) VALUES (?,?,?)' \
+            .format(self.extreme_distance_table)
+
+        try:
+            self.open_connection(db_file=self.db_file)
+            self.cursor.execute(insert_into_extreme_distance, ('mfcc', min_feature.mfcc, max_feature.mfcc))
+            self.cursor.execute(insert_into_extreme_distance,
+                                ('chroma_cens', min_feature.chroma_cens, max_feature.chroma_cens))
+            self.cursor.execute(insert_into_extreme_distance,
+                                ('chroma_stft', min_feature.chroma_stft, max_feature.chroma_stft))
+            self.cursor.execute(insert_into_extreme_distance, ('mel', min_feature.mel, max_feature.mel))
+            self.cursor.execute(insert_into_extreme_distance, ('tonnetz', min_feature.tonnetz, max_feature.tonnetz))
+            self.cursor.execute(insert_into_extreme_distance, ('rhythm', min_feature.rhythm, max_feature.rhythm))
+            self.conn.commit()
+            self.conn.close()
+        except sqlite3.Error as e:
+            self.logger.error("Error in inserting initially into extreme table: " + str(e.args[0]))
+            self.conn.close()
+            return False
+        return True
+
+    def update_extreme_distance(self, feature_name, min_dist, max_dist):
+        """
+        Update the table with min and max features values initially
+
+        :param feature_name:
+        :param min_dist:
+        :param max_dist:
+        :return:
+        """
+        update_extreme_distance = 'UPDATE {} SET min_distance=?, max_distance=? WHERE feature=?' \
+            .format(self.extreme_distance_table)
+
+        try:
+            self.open_connection(db_file=self.db_file)
+            self.cursor.execute(update_extreme_distance, (min_dist, max_dist, feature_name))
+            self.conn.commit()
+            self.conn.close()
+        except sqlite3.Error as e:
+            self.logger.error("Error in updating features values in extreme table: " + str(e.args[0]))
+            self.conn.close()
+            return False
+        return True
+
+    # TODO: allows the user to add factors values to distance table
+    def add_factors(self, feature):
+        """add the factors to """
+        pass
 
     def delete_tables(self):
         delete_song_table = 'DROP TABLE ' + self.song_table

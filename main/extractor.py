@@ -16,22 +16,17 @@ class Extractor:
         file_list = file.split('/')
         name = file_list[len(file_list) - 1]
 
-        self.logger.info('Calculating features of ' + file)
-        print('Calculating features of ' + file)
+        self.logger.info('Calculating features of ' + name)
+        print('Calculating features of ' + name)
         y, sr = librosa.load(file)
 
         # Calculating mfcc feature
         mfcc = librosa.feature.mfcc(y, sr, n_mfcc=20)
-
         # Calculating chroma_cens feature
         chroma_cens = librosa.feature.chroma_cens(y=y, sr=sr)
-
         chroma_stft = librosa.feature.chroma_stft(y=y, sr=sr)
-
         mel = librosa.feature.melspectrogram(y=y, sr=sr)
-
         tonnetz = librosa.feature.tonnetz(y=y, sr=sr)
-
         # Rhythm
         rhythm = librosa.feature.tempogram(y=y, sr=sr)
 
