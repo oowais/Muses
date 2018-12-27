@@ -3,6 +3,10 @@ import logging
 import numpy
 
 
+# TODO: change the structure of distance table to have the factors value also
+# TODO: add a new table for storing highest and lowest value of all the features
+# TODO: add a method to factorize the values
+# TODO: create update_tables() method which might be used later on
 class Db:
     def __init__(self, storage_file):
         """Constructor for Database
@@ -173,5 +177,3 @@ class Db:
             return None
         return distances
 
-    # toDO: correct save data method get data from database and compare the previous numpy array with new ones
-    # todo: np.fromstring()
