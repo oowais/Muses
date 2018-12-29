@@ -16,8 +16,6 @@ class Extractor:
         file_list = file.split('/')
         name = file_list[len(file_list) - 1]
 
-        self.logger.info('Calculating features of ' + name)
-        print('Calculating features of ' + name)
         y, sr = librosa.load(file)
 
         # Calculating mfcc feature
@@ -30,14 +28,16 @@ class Extractor:
         # Rhythm
         rhythm = librosa.feature.tempogram(y=y, sr=sr)
 
-        hash = sha256sum(file)
+        # Currently using name instead of hash value
+        # hash = sha256sum(file)
+        hash = name
 
         return Feature(hash=hash, name=name, mfcc=mfcc, chroma_cens=chroma_cens, chroma_stft=chroma_stft, mel=mel,
                        tonnetz=tonnetz, rhythm=rhythm)
 
     def get_distance(self, feature1, feature2):
-        self.logger.info('Calculating distance between ' + feature1.name + ' and ' + feature2.name)
-        print('Calculating distance between ' + feature1.name + ' and ' + feature2.name)
+        self.logger.info(feature1.name + ' <==> ' + feature2.name)
+        print(feature1.name + ' <==> ' + feature2.name)
         dist_func = euclidean
 
         distance1, new_path = fastdtw.fastdtw(feature1.mfcc.T, feature2.mfcc.T, dist=dist_func)
@@ -48,5 +48,5 @@ class Extractor:
         distance6, new_path6 = fastdtw.fastdtw(feature1.rhythm.T, feature2.rhythm.T, dist=dist_func)
 
         return Distance(hash1=feature1.hash, hash2=feature2.hash, mfcc_dist=distance1, chroma_cens_dist=distance2,
-                        chroma_stf_dist=distance3, mel_dist=distance4, tonnetz_dist=distance5,
+                        chroma_stft_dist=distance3, mel_dist=distance4, tonnetz_dist=distance5,
                         rhythm_dist=distance6)

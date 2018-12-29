@@ -3,9 +3,6 @@ import logging
 import numpy
 
 
-# TODO: add a new table for storing highest and lowest value of all the features
-# TODO: add a method to factorize the values
-# TODO: create update_tables() method which might be used later on
 class Db:
     def __init__(self, storage_file):
         """Constructor for Database
@@ -48,28 +45,28 @@ class Db:
         True if table created or already present, False if database error
         """
         # create_song_table = "CREATE TABLE IF NOT EXISTS {} (hash text PRIMARY KEY, " \
-        #                     "name text NOT NULL, mfcc BLOB, chroma_cens BLOB, chroma_stf BLOB, mel BLOB," \
+        #                     "name text NOT NULL, mfcc BLOB, chroma_cens BLOB, chroma_stft BLOB, mel BLOB," \
         #                     "tonnetz BLOB, rhythm BLOB)".format(self.song_table)
 
         create_distance_table = "CREATE TABLE IF NOT EXISTS {} (" \
                                 "hash1 text NOT NULL, hash2 text NOT NULL, " \
                                 "mfcc_dist real, mfcc_dist_factor real, " \
                                 "chroma_cens_dist real, chroma_cens_dist_factor real, " \
-                                "chroma_stf_dist real, chroma_stf_dist_factor real," \
+                                "chroma_stft_dist real, chroma_stft_dist_factor real," \
                                 "mel_dist real, mel_dist_factor real, " \
                                 "tonnetz_dist real, tonnetz_dist_factor real," \
                                 "rhythm_dist real, rhythm_dist_factor real," \
                                 "PRIMARY KEY (hash1, hash2))" \
             .format(self.distance_table)
 
-        create_max_distance_table = "CREATE TABLE IF NOT EXISTS {} (feature PRIMARY KEY, min_distance REAL NOT NUll," \
-                                    "max_distance REAL NOT NULL)".format(self.extreme_distance_table)
+        create_extreme_distance_table = "CREATE TABLE IF NOT EXISTS {} (feature PRIMARY KEY, min_distance REAL " \
+                                        "NOT NUll,max_distance REAL NOT NULL)".format(self.extreme_distance_table)
 
         try:
             self.open_connection(db_file=self.db_file)
             # self.cursor.execute(create_song_table)
             self.cursor.execute(create_distance_table)
-            self.cursor.execute(create_max_distance_table)
+            self.cursor.execute(create_extreme_distance_table)
 
             self.conn.commit()
             self.conn.close()
@@ -95,11 +92,21 @@ class Db:
         # insert_into_song_table = "INSERT INTO {} (hash, name, mfcc, chroma_cens, chroma_stf, mel, tonnetz, rhythm) " \
         #                          "VALUES (?,?,?,?,?,?,?,?)".format(self.song_table)
 
-        insert_into_distance_table = "INSERT INTO {} (hash1, hash2, mfcc_dist, chroma_cens_dist, chroma_stf_dist," \
-                                     "mel_dist, tonnetz_dist, rhythm_dist) VALUES (?,?,?,?,?,?,?,?)" \
+        insert_into_distance_table = "INSERT INTO {} (hash1, hash2, mfcc_dist, mfcc_dist_factor, chroma_cens_dist," \
+                                     "chroma_cens_dist_factor, chroma_stft_dist, chroma_stft_dist_factor," \
+                                     "mel_dist, mel_dist_factor, tonnetz_dist, tonnetz_dist_factor, rhythm_dist," \
+                                     "rhythm_dist_factor) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)" \
             .format(self.distance_table)
 
         try:
+            self.cursor.execute(insert_into_distance_table, (dist_obj.hash1, dist_obj.hash2,
+                                                             dist_obj.mfcc_dist, 0.0,
+                                                             dist_obj.chroma_cens_dist, 0.0,
+                                                             dist_obj.chroma_stft_dist, 0.0,
+                                                             dist_obj.mel_dist, 0.0,
+                                                             dist_obj.tonnetz_dist, 0.0,
+                                                             dist_obj.rhythm_dist, 0.0))
+
             # self.cursor.execute(insert_into_song_table, (song1.hash, song1.name,
             #                                              numpy.ndarray.tobytes(song1.mfcc),
             #                                              numpy.ndarray.tobytes(song1.chroma_cens),
@@ -115,11 +122,6 @@ class Db:
             #                                              numpy.ndarray.tobytes(song2.mel),
             #                                              numpy.ndarray.tobytes(song2.tonnetz),
             #                                              numpy.ndarray.tobytes(song2.rhythm)))
-
-            self.cursor.execute(insert_into_distance_table, (dist_obj.hash1, dist_obj.hash2, dist_obj.mfcc_dist,
-                                                             dist_obj.chroma_cens_dist, dist_obj.chroma_stf_dist,
-                                                             dist_obj.mel_dist, dist_obj.tonnetz_dist,
-                                                             dist_obj.rhythm_dist))
 
             self.conn.commit()
             self.conn.close()
@@ -137,6 +139,10 @@ class Db:
         :param max_feature:
         :return:
         """
+        ext_dist = self.get_extreme_distances()
+        if len(ext_dist) > 0:
+            print('Extreme distance table already initialized')
+            return True
         insert_into_extreme_distance = 'INSERT INTO {} (feature, min_distance, max_distance) VALUES (?,?,?)' \
             .format(self.extreme_distance_table)
 
@@ -158,9 +164,51 @@ class Db:
             return False
         return True
 
+    def update_min_distance(self, feature_name, value):
+        """
+        Update the extreme distance table with given min feature value
+
+        :param feature_name:
+        :param value:
+        :return:
+        """
+        update_extreme_distance = 'UPDATE {} SET min_distance=? WHERE feature=?'.format(self.extreme_distance_table)
+
+        try:
+            self.open_connection(db_file=self.db_file)
+            self.cursor.execute(update_extreme_distance, (value, feature_name))
+            self.conn.commit()
+            self.conn.close()
+        except sqlite3.Error as e:
+            self.logger.error("Error in updating min value in extreme table: " + str(e.args[0]))
+            self.conn.close()
+            return False
+        return True
+
+    def update_max_distance(self, feature_name, value):
+        """
+        Update the extreme distance table with given max feature value
+
+        :param feature_name:
+        :param value:
+        :return:
+        """
+        update_extreme_distance = 'UPDATE {} SET max_distance=? WHERE feature=?'.format(self.extreme_distance_table)
+
+        try:
+            self.open_connection(db_file=self.db_file)
+            self.cursor.execute(update_extreme_distance, (value, feature_name))
+            self.conn.commit()
+            self.conn.close()
+        except sqlite3.Error as e:
+            self.logger.error("Error in updating max value in extreme table: " + str(e.args[0]))
+            self.conn.close()
+            return False
+        return True
+
     def update_extreme_distance(self, feature_name, min_dist, max_dist):
         """
-        Update the table with min and max features values initially
+        Update the table with min and max feature values
 
         :param feature_name:
         :param min_dist:
@@ -181,10 +229,27 @@ class Db:
             return False
         return True
 
-    # TODO: allows the user to add factors values to distance table
-    def add_factors(self, feature):
-        """add the factors to """
-        pass
+    def update_factors(self, dist):
+        """add the factors to a row in distance table"""
+
+        update_factors = 'UPDATE {} SET mfcc_dist_factor=?, chroma_cens_dist_factor=?, ' \
+                         'chroma_stft_dist_factor=?, mel_dist_factor=?, tonnetz_dist_factor=?,' \
+                         'rhythm_dist_factor=? WHERE ((hash1=? and hash2=?) OR (hash1=? AND hash2=?))' \
+            .format(self.distance_table)
+        try:
+            self.open_connection(db_file=self.db_file)
+            # factors also stored in distance class object
+            self.cursor.execute(update_factors, (dist.mfcc_dist, dist.chroma_cens_dist,
+                                                 dist.chroma_stft_dist, dist.mel_dist,
+                                                 dist.tonnetz_dist, dist.rhythm_dist,
+                                                 dist.hash1, dist.hash2, dist.hash2, dist.hash1))
+            self.conn.commit()
+            self.conn.close()
+        except sqlite3.Error as e:
+            self.logger.error("Error in updating factor values in distance table: " + str(e.args[0]))
+            self.conn.close()
+            return False
+        return True
 
     def delete_tables(self):
         delete_song_table = 'DROP TABLE ' + self.song_table
@@ -202,6 +267,7 @@ class Db:
             return False
         return True
 
+    @DeprecationWarning
     def get_song(self, hash_val):
         """
         Get song data according to selected hash
@@ -220,13 +286,54 @@ class Db:
             return None
         return song
 
-    def get_distance(self, hash1, hash2):
+    def is_hashes_present(self, hash1, hash2):
         """
-        Return the feature distnaces between two files
+        check if hashes already present in distance table
 
         :param hash1:
         :param hash2:
-        :return: feature class
+        :return: True, False or None
+        """
+        get_distance = 'SELECT * FROM {} WHERE ((hash1=? AND hash2=?) OR (hash1=? AND hash2=?))' \
+            .format(self.distance_table)
+        try:
+            self.open_connection(db_file=self.db_file)
+            self.cursor.execute(get_distance, (hash1, hash2, hash2, hash1))
+            distances = self.cursor.fetchall()
+            self.conn.close()
+        except sqlite3.Error as e:
+            self.logger.error('Error in fetching from distance table', str(e.args[0]))
+            self.conn.close()
+            return None
+        if len(distances) > 0:
+            return True
+        else:
+            return False
+
+    def get_complete_distance_table(self):
+        """
+        Returns the numbers of rows in distance table
+        """
+        get = 'SELECT * FROM {}'.format(self.distance_table)
+
+        try:
+            self.open_connection(db_file=self.db_file)
+            self.cursor.execute(get)
+            value = self.cursor.fetchall()
+            self.conn.close()
+        except sqlite3.Error as e:
+            self.logger.error('Error in fetching number of rows in distance table', str(e.args[0]))
+            self.conn.close()
+            return None
+        return value
+
+    def get_distance(self, hash1, hash2):
+        """
+        Return the feature distances between two audio files from db if present
+
+        :param hash1:
+        :param hash2:
+        :return: feature class or None
         """
         get_distance = 'SELECT * FROM {} WHERE hash1=? AND hash2=?'.format(self.distance_table)
         try:
@@ -245,7 +352,7 @@ class Db:
 
     def get_extreme_distances(self):
         """
-        Returns the min and max distances of all the feautures
+        Returns the min and max distances of all the features
 
         :return:
         """
@@ -257,6 +364,48 @@ class Db:
             self.conn.close()
         except sqlite3.Error as e:
             self.logger.error('Error in fetching from extreme distance table', str(e.args[0]))
+            self.conn.close()
+            return None
+        return data
+
+    def get_extreme_distance(self, feature_name):
+        """
+        Returns the min and max distances of one feature
+
+        :param: feature_name
+
+        :return: min, max distnce as tuple or none
+        """
+        get_extreme_distances = "SELECT * FROM {} WHERE feature=?".format(self.extreme_distance_table)
+        try:
+            self.open_connection(db_file=self.db_file)
+            self.cursor.execute(get_extreme_distances, (feature_name,))
+            data = self.cursor.fetchall()
+            self.conn.close()
+        except sqlite3.Error as e:
+            self.logger.error('Error in fetching from extreme distance table', str(e.args[0]))
+            self.conn.close()
+            return None
+        return data
+
+    def get_all_factors(self):
+        """
+        Returns all the factors values of features from the distance tables
+        """
+
+        get_factors = 'SELECT hash1, hash2, mfcc_dist_factor, chroma_cens_dist_factor, chroma_stft_dist_factor,' \
+                      'mel_dist_factor, tonnetz_dist_factor, rhythm_dist_factor FROM {}'.format(self.distance_table)
+
+        get_factor1 = 'SELECT hash1, hash2, mfcc_dist, chroma_cens_dist, chroma_stft_dist, mel_dist, tonnetz_dist,' \
+                      'rhythm_dist FROM {}'.format(self.distance_table)
+
+        try:
+            self.open_connection(db_file=self.db_file)
+            self.cursor.execute(get_factor1)
+            data = self.cursor.fetchall()
+            self.conn.close()
+        except sqlite3.Error as e:
+            self.logger.error('Error in fetching factors from extreme distance table', str(e.args[0]))
             self.conn.close()
             return None
         return data

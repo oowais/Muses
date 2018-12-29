@@ -10,7 +10,7 @@ class Feature:
         hash: hash of audio
         mfcc: feautre
         chroma_cens: feature
-        chroma_stf: feature
+        chroma_stft: feature
         mel: feature
         tonnetz: feature
         rhythm: feature
