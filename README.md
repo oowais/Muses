@@ -31,8 +31,6 @@ Error should be resolved now.
 >Note: This installation of dependencies are done only using pip and not conda.
 
 ## Future prosects
-- Use multiple features than just using mfcc to compare
-- Factor the feature distance values from 0-1
 - Store Audio data like features in database
 - Load audio from youtube
 - Able to tell which song to pick from youtube
