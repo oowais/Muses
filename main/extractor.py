@@ -15,7 +15,7 @@ class Extractor:
     def get_all_features(self, file):
         file_list = file.split('/')
         name = file_list[len(file_list) - 1]
-
+        print('Processing ', name, '...')
         y, sr = librosa.load(file)
 
         # Calculating mfcc feature
