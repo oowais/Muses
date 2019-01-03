@@ -1,6 +1,7 @@
 class Distance:
 
-    def __init__(self, hash1=None, hash2=None, mfcc_dist=None, chroma_cens_dist=None, chroma_stft_dist=None,
+    def __init__(self, hash1=None, hash2=None, name1=None, name2=None, mfcc_dist=None, chroma_cens_dist=None,
+                 chroma_stft_dist=None,
                  mel_dist=None, tonnetz_dist=None, rhythm_dist=None):
         """Constructor for Song data class
 
@@ -18,6 +19,8 @@ class Distance:
         """
         self._hash1 = hash1
         self._hash2 = hash2
+        self._name1 = name1
+        self._name2 = name2
         self._mfcc_dist = mfcc_dist
         self._chroma_cens_dist = chroma_cens_dist
         self._chroma_stft_dist = chroma_stft_dist
@@ -32,6 +35,14 @@ class Distance:
     @property
     def hash2(self):
         return self._hash2
+
+    @property
+    def name1(self):
+        return self._name1
+
+    @property
+    def name2(self):
+        return self._name2
 
     @property
     def mfcc_dist(self):
