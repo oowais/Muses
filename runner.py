@@ -1,5 +1,6 @@
 import os
 import time
+from threading import Thread
 
 from db import Db
 from extractor import Extractor
@@ -10,6 +11,21 @@ audio_folder_name = 'audio_resources'
 root_dir_path = os.path.abspath(os.path.dirname(__file__))
 db_file = os.path.join(root_dir_path, database_name)
 audio_path = os.path.join(root_dir_path, audio_folder_name)
+
+
+class ThreadWithReturnValue(Thread):
+    def __init__(self, group=None, target=None, name=None,
+                 args=(), kwargs={}, Verbose=None):
+        Thread.__init__(self, group, target, name, args, kwargs)
+        self._return = None
+
+    def run(self):
+        if self._target is not None:
+            self._return = self._target(*self._args, **self._kwargs)
+
+    def join(self, *args):
+        Thread.join(self, *args)
+        return self._return
 
 
 def get_features_and_distance():
@@ -32,6 +48,7 @@ def get_features_and_distance():
         ifile = file_list[i]
         # get two audios
         if ifile not in processed_file_list:
+            ipath = os.path.join(audio_path, ifile)
             update_ifile = 1
             processed_file_list.append(ifile)
             print('------------------------')
@@ -40,6 +57,7 @@ def get_features_and_distance():
             j = i + 1
             while j < file_list_size:
                 jfile = file_list[j]
+                jpath = os.path.join(audio_path, jfile)
                 jfile_sha = sha256sum(os.path.join(audio_path, jfile))
 
                 # check if their hash is already present in the distance table
@@ -50,15 +68,32 @@ def get_features_and_distance():
                 else:
                     # if not, calculate features and distances and save to db
                     if update_ifile:
-                        ifeature = ex.get_all_features(os.path.join(audio_path, ifile))
+                        ithread = ThreadWithReturnValue(target=ex.get_all_features, args=(ipath,))
+                        ithread.start()
+                        # ifeature = ex.get_all_features(os.path.join(audio_path, ifile))
                         update_ifile = 0
-                    jfeature = ex.get_all_features(os.path.join(audio_path, jfile))
-                    dist = ex.get_distance(ifeature, jfeature)
-                    db.save_feature_distances(dist)
+                    jthread = ThreadWithReturnValue(target=ex.get_all_features, args=(jpath,))
+                    jthread.start()
+                    ifeature = ithread.join()
+                    jfeature = jthread.join()
+                    # jfeature = ex.get_all_features(os.path.join(audio_path, jfile))
+
+                    # dist = ex.get_distance(ifeature, jfeature)
+                    # db.save_feature_distances(dist)
+                    if i > 0:
+                        dist_thread.join()
+                    dist_thread = ThreadWithReturnValue(target=save_feature, args=(db, ex, ifeature, jfeature,))
+                    dist_thread.start()
                 j += 1
         i += 1
+    dist_thread.join()
     print("Done! Took %.0f seconds to calculate features and distances between " % (
             time.time() - start_time) + str(file_list_size) + " files")
+
+
+def save_feature(db, ex, ifeature, jfeature):
+    dist = ex.get_distance(ifeature, jfeature)
+    db.save_feature_distances(dist)
 
 
 def print_factors():
