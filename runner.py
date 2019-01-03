@@ -86,6 +86,7 @@ def get_features_and_distance():
                     dist_thread.start()
                 j += 1
         i += 1
+    # todo: check if its an object or not
     dist_thread.join()
     print("Done! Took %.0f seconds to calculate features and distances between " % (
             time.time() - start_time) + str(file_list_size) + " files")
