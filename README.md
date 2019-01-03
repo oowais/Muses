@@ -4,6 +4,10 @@ Comparing audio using LSH and mfcc and more
 ## Setup
 `pip3 install -r requirements.txt`
 
+## Run
+'python runner.py'
+You might have to add sudo depending on the configuration of your system
+
 ## Problems with importing librosa
 ### Test if librosa installed installed properly. 
 Open a python shell and type the following command  
@@ -31,10 +35,10 @@ Error should be resolved now.
 >Note: This installation of dependencies are done only using pip and not conda.
 
 ## Future prosects
+- Way to cluster close audio
 - Store Audio data like features in database
 - Load audio from youtube
 - Able to tell which song to pick from youtube
-- Way to cluster close audio
 
 ## Dependencies
 | Dependency  | Command |
