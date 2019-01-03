@@ -5,7 +5,7 @@ Comparing audio using LSH and mfcc and more
 `pip3 install -r requirements.txt`
 
 ## Run
-'python runner.py'
+`python runner.py`
 You might have to add sudo depending on the configuration of your system
 
 ## Problems with importing librosa
