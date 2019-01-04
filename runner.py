@@ -97,20 +97,28 @@ def save_feature(db, ifeature, jfeature):
     db.save_feature_distances(dist)
 
 
-def print_factors():
+def get_names_from_db():
     db = Db(storage_file=db_file)
-    file_list = os.listdir(audio_path)
-    name_list = []
+    names_db = db.get_all_names()
+    names = []
+    for n in names_db:
+        if n[0] not in names:
+            names.append(n[0])
+        if n[1] not in names:
+            names.append(n[1])
+    return names
 
-    for file in file_list:
-        name_list.append(get_name(file))
+
+def print_factors   ():
+    db = Db(storage_file=db_file)
+    names = get_names_from_db()
     factors = db.get_all_distances()
     while True:
         print()
         var = 0
         # Printing name of files from the folder
-        while var < len(name_list):
-            print('%-30s %-30s' % (str(var + 1) + ' ' + name_list[var], str(var + 2) + ' ' + name_list[var + 1]))
+        while var < len(names):
+            print('%-30s %-30s' % (str(var + 1) + ' ' + names[var], str(var + 2) + ' ' + names[var + 1]))
             var += 2
 
         # Getting a file number
@@ -123,12 +131,12 @@ def print_factors():
 
         if val == 0:
             break
-        elif val > len(name_list):
+        elif val > len(names):
             print('Enter a valid number, Press enter to continue')
             input()
             continue
         print()
-        selected_track = name_list[val - 1]
+        selected_track = names[val - 1]
 
         sum_list = []
         for fact in factors:
