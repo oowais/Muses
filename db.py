@@ -48,7 +48,7 @@ class Db:
 
         create_distance_table = "CREATE TABLE IF NOT EXISTS {} (" \
                                 "hash1 text NOT NULL, hash2 text NOT NULL, name1 text NOT NULL, name2 text NOT NULL," \
-                                "mfcc_dist real, chroma_cens_dist real, chroma_stft_dist real, mel_dist real," \
+                                "mfcc_dist real, cqt_dist real, chroma_stft_dist real, pcp_dist real," \
                                 "tonnetz_dist real, rhythm_dist real, PRIMARY KEY (hash1, hash2))" \
             .format(self.distance_table)
 
@@ -81,16 +81,16 @@ class Db:
         # insert_into_song_table = "INSERT INTO {} (hash, name, mfcc, chroma_cens, chroma_stf, mel, tonnetz, rhythm) " \
         #                          "VALUES (?,?,?,?,?,?,?,?)".format(self.song_table)
 
-        insert_into_distance_table = "INSERT INTO {} (hash1, hash2, name1, name2, mfcc_dist, chroma_cens_dist," \
-                                     "chroma_stft_dist, mel_dist, tonnetz_dist, rhythm_dist) " \
+        insert_into_distance_table = "INSERT INTO {} (hash1, hash2, name1, name2, mfcc_dist, cqt_dist," \
+                                     "chroma_stft_dist, pcp_dist, tonnetz_dist, rhythm_dist) " \
                                      "VALUES (?,?,?,?,?,?,?,?,?,?)" \
             .format(self.distance_table)
 
         try:
             self.cursor.execute(insert_into_distance_table, (dist_obj.hash1, dist_obj.hash2,
                                                              dist_obj.name1, dist_obj.name2,
-                                                             dist_obj.mfcc_dist, dist_obj.chroma_cens_dist,
-                                                             dist_obj.chroma_stft_dist, dist_obj.mel_dist,
+                                                             dist_obj.mfcc_dist, dist_obj.cqt_dist,
+                                                             dist_obj.chroma_stft_dist, dist_obj.pcp_dist,
                                                              dist_obj.tonnetz_dist, dist_obj.rhythm_dist))
 
             # self.cursor.execute(insert_into_song_table, (song1.hash, song1.name,
@@ -221,7 +221,7 @@ class Db:
         Returns all the factors values of features from the distance tables
         """
 
-        get_factor = 'SELECT name1, name2, mfcc_dist, chroma_cens_dist, chroma_stft_dist, mel_dist, tonnetz_dist,' \
+        get_factor = 'SELECT name1, name2, mfcc_dist, cqt_dist, chroma_stft_dist, pcp_dist, tonnetz_dist,' \
                      'rhythm_dist FROM {}'.format(self.distance_table)
 
         try:
