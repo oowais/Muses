@@ -21,16 +21,16 @@ def get_name(file):
         return file_list[len(file_list) - 1]
 
 
-def scale(rmin, rmax, val, tmin=0.0, tmax=10.0):
+def scale(rmin, rmax, val):
     """
-    scale a value from list to a specific range
+    scale a value from list to (0-1)
     :param rmin: min of list
     :param rmax: max of list
     :param val: current value from list
-    :param tmin: target min
-    :param tmax: target max
     :return: target value scaled
     """
+    tmin = 0.0
+    tmax = 1.0
     if rmin == rmax:
         return 0
     return ((val - rmin) / (rmax - rmin)) * (tmax - tmin) + tmin
