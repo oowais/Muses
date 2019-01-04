@@ -6,7 +6,8 @@ from util import sha256sum, scale, get_name, progress, sum_n
 from thread import ThreadWithReturnValue
 from extractor import get_all_features, get_distance
 
-database_name = 'db.sqlite'
+# database_name = 'db.sqlite'
+database_name = 'test.sqlite'
 audio_folder_name = 'audio_resources'
 root_dir_path = os.path.abspath(os.path.dirname(__file__))
 db_file = os.path.join(root_dir_path, database_name)
@@ -64,7 +65,7 @@ def get_features_and_distance():
                         ifeature = ithread.join()
                         update_ifile = False
                         curr_prog += 1
-                        progress(scale(0, total_prog, curr_prog, 0, 1))
+                        progress(scale(0, total_prog, curr_prog))
                     jfeature = jthread.join()
                     # jfeature = ex.get_all_features(os.path.join(audio_path, jfile))
 
@@ -75,7 +76,7 @@ def get_features_and_distance():
                     dist_thread = ThreadWithReturnValue(target=save_feature, args=(db, ifeature, jfeature,))
                     dist_thread.start()
                     curr_prog += 1
-                    progress(scale(0, total_prog, curr_prog, 0, 1))
+                    progress(scale(0, total_prog, curr_prog))
                     processing = True
                 j += 1
         i += 1
@@ -136,21 +137,21 @@ def print_factors():
         min_val = min(sum_list)
         max_val = max(sum_list)
 
-        print('Tracks closest to ', selected_track, '(in ascending order):')
+        print('Similarity measure with ', selected_track)
         result = []
         i = 0
         while i < len(factors):
             scaled_sum = scale(rmin=min_val, rmax=max_val, val=sum_list[i])
             if factors[i][0] == selected_track:
-                result.append((factors[i][1], scaled_sum))
+                result.append((factors[i][1], 100*(1-scaled_sum)))
             elif factors[i][1] == selected_track:
-                result.append((factors[i][0], scaled_sum))
+                result.append((factors[i][0], 100*(1-scaled_sum)))
             i += 1
 
         # Sorting according to distance
-        result.sort(key=lambda tup: tup[1])
+        result.sort(key=lambda tup: tup[1], reverse=True)
         for a in result:
-            print(a[0], ' ', a[1])
+            print('%-30s - %.1f%%' % (a[0], a[1]))
         print('---------------------------------------------------------------')
         print('Press Enter to continue...')
         input()
