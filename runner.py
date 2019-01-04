@@ -14,7 +14,7 @@ db_file = os.path.join(root_dir_path, database_name)
 audio_path = os.path.join(root_dir_path, audio_folder_name)
 
 
-def get_features_and_distance():
+def calc_feature():
     """
     Loop through the audio_resources folder and calculate features of each track and the distance between them
     """
@@ -73,7 +73,7 @@ def get_features_and_distance():
                     # db.save_feature_distances(dist)
                     if processing:  # distances can be calculated until the next features are calculated
                         dist_thread.join()
-                    dist_thread = ThreadWithReturnValue(target=save_feature, args=(db, ifeature, jfeature,))
+                    dist_thread = ThreadWithReturnValue(target=save_dist_to_db, args=(db, ifeature, jfeature,))
                     dist_thread.start()
                     curr_prog += 1
                     progress(scale(0, total_prog, curr_prog))
@@ -86,13 +86,12 @@ def get_features_and_distance():
                 time.time() - start_time) + str(file_list_size) + " files"
     else:
         message = 'Data collected from database'
-
     progress(1)
     print()
     print(message)
 
 
-def save_feature(db, ifeature, jfeature):
+def save_dist_to_db(db, ifeature, jfeature):
     dist = get_distance(ifeature, jfeature)
     db.save_feature_distances(dist)
 
@@ -109,7 +108,7 @@ def get_names_from_db():
     return names
 
 
-def print_factors   ():
+def show_similarity():
     db = Db(storage_file=db_file)
     names = get_names_from_db()
     factors = db.get_all_distances()
@@ -117,6 +116,7 @@ def print_factors   ():
         print()
         var = 0
         # Printing name of files from the folder
+
         while var < len(names):
             print('%-30s %-30s' % (str(var + 1) + ' ' + names[var], str(var + 2) + ' ' + names[var + 1]))
             var += 2
@@ -128,7 +128,6 @@ def print_factors   ():
             print('Enter a valid number, Press enter to continue')
             input()
             continue
-
         if val == 0:
             break
         elif val > len(names):
@@ -147,16 +146,14 @@ def print_factors   ():
 
         print('Similarity measure with ', selected_track)
         result = []
-        i = 0
-        while i < len(factors):
-            scaled_sum = scale(rmin=min_val, rmax=max_val, val=sum_list[i])
-            if factors[i][0] == selected_track:
-                result.append((factors[i][1], 100*(1-scaled_sum)))
-            elif factors[i][1] == selected_track:
-                result.append((factors[i][0], 100*(1-scaled_sum)))
-            i += 1
+        for index, factor in enumerate(factors):
+            scaled_sum = scale(rmin=min_val, rmax=max_val, val=sum_list[index])
+            if factor[0] == selected_track:
+                result.append((factor[1], 100 * (1 - scaled_sum)))
+            elif factor[1] == selected_track:
+                result.append((factor[0], 100 * (1 - scaled_sum)))
 
-        # Sorting according to distance
+        # Sorting according to similarity
         result.sort(key=lambda tup: tup[1], reverse=True)
         for a in result:
             print('%-30s - %.1f%%' % (a[0], a[1]))
@@ -167,5 +164,5 @@ def print_factors   ():
 
 
 if __name__ == '__main__':
-    get_features_and_distance()
-    print_factors()
+    calc_feature()
+    show_similarity()
