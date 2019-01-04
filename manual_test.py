@@ -2,12 +2,16 @@ import os
 import sys
 from time import sleep
 
+import fastdtw
+import librosa
+from scipy.spatial.distance import euclidean
+
 from db import Db
 from extractor import get_all_features, get_distance
 
 database_name = 'db.sqlite'
 audio_folder_name = 'audio_resources'
-root_dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
+root_dir_path = os.path.abspath(os.path.dirname(__file__))
 db_file = os.path.join(root_dir_path, database_name)
 audio_path = os.path.join(root_dir_path, audio_folder_name)
 
@@ -15,8 +19,8 @@ audio_path = os.path.join(root_dir_path, audio_folder_name)
 def get_features_and_save_to_db_test():
     name1 = 'metal0.mp3'
     name2 = 'metal1.mp3'
-    file1 = '../audio_resources/' + name1
-    file2 = '../audio_resources/' + name2
+    file1 = os.path.join(audio_path, name1)
+    file2 = os.path.join(audio_path, name2)
 
     feature1 = get_all_features(file1)
     feature2 = get_all_features(file2)
@@ -77,9 +81,31 @@ def sum_n(n):
     print((n * (n - 1)) / 2)
 
 
+def mfcc_test():
+    dist_func = euclidean
+    name1 = 'blues0.mp3'
+    name2 = 'blues1.mp3'
+    file1 = os.path.join(audio_path, name1)
+    file2 = os.path.join(audio_path, name2)
+    y1, sr1 = librosa.load(file1)
+    mfcc1 = librosa.feature.mfcc(y1, sr1, n_mfcc=20)
+
+    mel_spectrogram1 = librosa.feature.melspectrogram(y1, sr1)
+    log_s1 = librosa.amplitude_to_db(mel_spectrogram1)
+    mfccnew1 = librosa.feature.mfcc(S=log_s1)
+
+    y2, sr2 = librosa.load(file2)
+    mfcc2 = librosa.feature.mfcc(y2, sr2, n_mfcc=20)
+
+    mel_spectrogram2 = librosa.feature.melspectrogram(y2, sr2)
+    log_s2 = librosa.amplitude_to_db(mel_spectrogram2)
+    mfccnew2 = librosa.feature.mfcc(S=log_s2)
+
+    dist1, path = fastdtw.fastdtw(mfcc1.T, mfcc2.T, dist=dist_func)
+    dist2, path = fastdtw.fastdtw(mfccnew1.T, mfccnew2.T, dist=dist_func)
+
+    print(dist1, dist2)
+
+
 if __name__ == '__main__':
-    sum_n(1)
-    print('Starting...')
-    lim = 20
-    for i in range(101):
-        progress(i / 100, lim)
+    mfcc_test()
