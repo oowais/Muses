@@ -1,8 +1,7 @@
 class Distance:
 
-    def __init__(self, hash1=None, hash2=None, name1=None, name2=None, mfcc_dist=None, chroma_cens_dist=None,
-                 chroma_stft_dist=None,
-                 mel_dist=None, tonnetz_dist=None, rhythm_dist=None):
+    def __init__(self, hash1=None, hash2=None, name1=None, name2=None, mfcc_dist=None, cqt_dist=None,
+                 chroma_stft_dist=None, pcp_dist=None, tonnetz_dist=None, rhythm_dist=None):
         """Constructor for Song data class
 
         Parameters
@@ -10,9 +9,9 @@ class Distance:
         hash1: hash of 1st audio
         hash2: hash of 2nd audio
         mfcc_dist: feautre
-        chroma_cens_dist: feature
+        cqt_dist: feature
         chroma_stft_dist: feature
-        mel_dist: feature
+        pcp_dist: feature
         tonnetz_dist: feature
         rhythm_dist: feature
 
@@ -22,9 +21,9 @@ class Distance:
         self._name1 = name1
         self._name2 = name2
         self._mfcc_dist = mfcc_dist
-        self._chroma_cens_dist = chroma_cens_dist
+        self._cqt_dist = cqt_dist
         self._chroma_stft_dist = chroma_stft_dist
-        self._mel_dist = mel_dist
+        self._pcp_dist = pcp_dist
         self._tonnetz_dist = tonnetz_dist
         self._rhythm_dist = rhythm_dist
 
@@ -49,16 +48,16 @@ class Distance:
         return self._mfcc_dist
 
     @property
-    def chroma_cens_dist(self):
-        return self._chroma_cens_dist
+    def cqt_dist(self):
+        return self._cqt_dist
 
     @property
     def chroma_stft_dist(self):
         return self._chroma_stft_dist
 
     @property
-    def mel_dist(self):
-        return self._mel_dist
+    def pcp_dist(self):
+        return self._pcp_dist
 
     @property
     def tonnetz_dist(self):
