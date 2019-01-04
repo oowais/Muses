@@ -131,9 +131,7 @@ def print_factors():
 
         sum_list = []
         for fact in factors:
-            # not using chroma_cens and mel feature
-            # sum_list.append(fact[2] + fact[3] + fact[4] + fact[5] + fact[6] + fact[7])
-            sum_list.append(fact[2] + fact[4] + fact[6] + fact[7])
+            sum_list.append(fact[2] + fact[3] + fact[4] + fact[5] + fact[6] + fact[7])
 
         min_val = min(sum_list)
         max_val = max(sum_list)
@@ -152,7 +150,7 @@ def print_factors():
         # Sorting according to distance
         result.sort(key=lambda tup: tup[1])
         for a in result:
-            print(a[0])
+            print(a[0], ' ', a[1])
         print('---------------------------------------------------------------')
         print('Press Enter to continue...')
         input()
