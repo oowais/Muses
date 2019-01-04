@@ -230,7 +230,23 @@ class Db:
             distances = self.cursor.fetchall()
             self.conn.close()
         except sqlite3.Error as e:
-            self.logger.error('Error in fetching factors from extreme distance table', str(e.args[0]))
+            self.logger.error('Error in fetching distances from extreme distance table', str(e.args[0]))
             self.conn.close()
             return None
         return distances
+
+    def get_all_names(self):
+        """
+        Returns name of all the files present in database
+        """
+        get_names = 'SELECT name1, name2 FROM {}'.format(self.distance_table)
+        try:
+            self.open_connection(db_file=self.db_file)
+            self.cursor.execute(get_names)
+            names = self.cursor.fetchall()
+            self.conn.close()
+        except sqlite3.Error as e:
+            self.logger.error('Error in fetching names from extreme distance table', str(e.args[0]))
+            self.conn.close()
+            return None
+        return names
