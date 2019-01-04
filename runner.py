@@ -82,8 +82,8 @@ def calc_feature():
         i += 1
     if processing:
         dist_thread.join()
-        message = "Done! Took %.0f seconds to calculate features and distances between " % (
-                time.time() - start_time) + str(file_list_size) + " files"
+        message = 'Done! Took %.0f seconds to calculate features and distances between ' % (
+                time.time() - start_time) + str(file_list_size) + ' files'
     else:
         message = 'Data collected from database'
     progress(1)
@@ -112,6 +112,14 @@ def show_similarity():
     db = Db(storage_file=db_file)
     names = get_names_from_db()
     factors = db.get_all_distances()
+
+    sum_list = []
+    for fact in factors:
+        sum_list.append(fact[2] + fact[3] + fact[4] + fact[5] + fact[6] + fact[7])
+
+    min_val = min(sum_list)
+    max_val = max(sum_list)
+
     while True:
         print()
         var = 0
@@ -136,13 +144,6 @@ def show_similarity():
             continue
         print()
         selected_track = names[val - 1]
-
-        sum_list = []
-        for fact in factors:
-            sum_list.append(fact[2] + fact[3] + fact[4] + fact[5] + fact[6] + fact[7])
-
-        min_val = min(sum_list)
-        max_val = max(sum_list)
 
         print('Similarity measure with ', selected_track)
         result = []
