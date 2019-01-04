@@ -1,5 +1,6 @@
 import platform
 import hashlib
+import sys
 
 
 def get_name(file):
@@ -48,3 +49,14 @@ def sha256sum(filename):
         for n in iter(lambda: f.readinto(mv), 0):
             h.update(mv[:n])
     return h.hexdigest()
+
+
+def progress(percent, barlen=20):
+    # percent float from 0 to 1.
+    sys.stdout.write("\r")
+    sys.stdout.write("[{:<{}}] {:.0f}%".format("=" * int(barlen * percent), barlen, percent * 100))
+    sys.stdout.flush()
+
+
+def sum_n(n):
+    return (n * (n - 1)) / 2
