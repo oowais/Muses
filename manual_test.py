@@ -1,7 +1,9 @@
 import os
+import sys
+from time import sleep
 
 from db import Db
-from extractor import Extractor
+from extractor import get_all_features, get_distance
 
 database_name = 'db.sqlite'
 audio_folder_name = 'audio_resources'
@@ -16,12 +18,10 @@ def get_features_and_save_to_db_test():
     file1 = '../audio_resources/' + name1
     file2 = '../audio_resources/' + name2
 
-    ex = Extractor()
+    feature1 = get_all_features(file1)
+    feature2 = get_all_features(file2)
 
-    feature1 = ex.get_all_features(file1)
-    feature2 = ex.get_all_features(file2)
-
-    dist = ex.get_distance(feature1, feature2)
+    dist = get_distance(feature1, feature2)
 
     db = Db(storage_file=db_file)
     # print('deleting tables: ', db.delete_tables())
@@ -44,5 +44,42 @@ def check_hashes_present():
     print(db.is_hashes_present(hash1, hash2))
 
 
+def progress_bar_test():
+    lim = 24
+    for i in range(21):
+        sys.stdout.write('\r')
+        # the exact output you're looking for:
+        sys.stdout.write("[%-20s] %d%%" % ('=' * i, 5 * i))
+        sys.stdout.flush()
+        sleep(0.25)
+
+
+def draw_progress_bar(percent, barlen=20):
+    sys.stdout.write("\r")
+    progress = ""
+    for i in range(barlen):
+        if i < int(barlen * percent):
+            progress += "="
+        else:
+            progress += " "
+    sys.stdout.write("[ %s ] %.2f%%" % (progress, percent * 100))
+    sys.stdout.flush()
+
+
+def progress(percent, barlen=20):
+    # percent float from 0 to 1.
+    sys.stdout.write("\r")
+    sys.stdout.write("[{:<{}}] {:.0f}%".format("=" * int(barlen * percent), barlen, percent * 100))
+    sys.stdout.flush()
+
+
+def sum_n(n):
+    print((n * (n - 1)) / 2)
+
+
 if __name__ == '__main__':
-    pass
+    sum_n(1)
+    print('Starting...')
+    lim = 20
+    for i in range(101):
+        progress(i / 100, lim)
