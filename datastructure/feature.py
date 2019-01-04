@@ -1,6 +1,6 @@
 class Feature:
 
-    def __init__(self, name=None, hash=None, mfcc=None, chroma_cens=None, chroma_stft=None, mel=None, tonnetz=None,
+    def __init__(self, name=None, hash=None, mfcc=None, cqt=None, chroma_stft=None, pcp=None, tonnetz=None,
                  rhythm=None):
         """Constructor for Song data class
 
@@ -9,9 +9,9 @@ class Feature:
         name: name of audio
         hash: hash of audio
         mfcc: feautre
-        chroma_cens: feature
+        cqt: feature
         chroma_stft: feature
-        mel: feature
+        pcp: feature
         tonnetz: feature
         rhythm: feature
 
@@ -19,9 +19,9 @@ class Feature:
         self._name = name
         self._hash = hash
         self._mfcc = mfcc
-        self._chroma_cens = chroma_cens
+        self._cqt = cqt
         self._chroma_stft = chroma_stft
-        self._mel = mel
+        self._pcp = pcp
         self._tonnetz = tonnetz
         self._rhythm = rhythm
 
@@ -38,16 +38,16 @@ class Feature:
         return self._mfcc
 
     @property
-    def chroma_cens(self):
-        return self._chroma_cens
+    def cqt(self):
+        return self._cqt
 
     @property
     def chroma_stft(self):
         return self._chroma_stft
 
     @property
-    def mel(self):
-        return self._mel
+    def pcp(self):
+        return self._pcp
 
     @property
     def tonnetz(self):
