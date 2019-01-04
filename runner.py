@@ -2,7 +2,7 @@ import os
 import time
 
 from db import Db
-from util import sha256sum, scale, get_name, progress, sum_n
+from util import sha256sum, scale, progress, sum_n
 from thread import ThreadWithReturnValue
 from extractor import get_all_features, get_distance
 
@@ -122,13 +122,12 @@ def show_similarity():
 
     while True:
         print()
-        var = 0
         # Printing name of files from the folder
-
-        while var < len(names):
-            print('%-30s %-30s' % (str(var + 1) + ' ' + names[var], str(var + 2) + ' ' + names[var + 1]))
-            var += 2
-
+        for i, name in enumerate(names):
+            print(' %-30s ' % (str(i + 1) + '. ' + name), end='')
+            if (i + 1) % 3 == 0:
+                print()
+        print()
         # Getting a file number
         try:
             val = int(input('Select a track number(0 to exit)...'))
@@ -156,9 +155,9 @@ def show_similarity():
 
         # Sorting according to similarity
         result.sort(key=lambda tup: tup[1], reverse=True)
-        for a in result:
-            print('%-30s - %.1f%%' % (a[0], a[1]))
-        print('---------------------------------------------------------------')
+        for val in result:
+            print('%-30s - %.1f %%' % (val[0], val[1]))
+        print('-------------------------------------------------')
         print('Press Enter to continue...')
         input()
         print()
