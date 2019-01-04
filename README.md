@@ -5,8 +5,23 @@ Comparing audio using LSH and mfcc and more
 `pip3 install -r requirements.txt`
 
 ## Run
-`python runner.py`
-You might have to add sudo depending on the configuration of your system
+### Run with your audio
+- Change the `database_name` from test.sqlite to anything else as per your liking (eg: db.sqlite) in `runner.py`  
+- Add audio files to `audio_resources` folder whose similarity you wish to find
+- run `python runner.py` from root of project
+
+### Run with existing data in database
+- make sure `audio_resources` folder is empty
+- make sure the `database_name` is test.db in `runner.py`  
+- run `python runner.py` from root of project
+
+>You might have to add sudo depending on the configuration of your system
+
+## Future prosects
+- Way to cluster close audio
+- Store Audio data like features in database
+- Load audio from youtube
+- Able to tell which song to pick from youtube
 
 ## Problems with importing librosa
 ### Test if librosa installed installed properly. 
@@ -33,12 +48,6 @@ After installing open python shell again and try to import librosa
 Error should be resolved now.
 
 >Note: This installation of dependencies are done only using pip and not conda.
-
-## Future prosects
-- Way to cluster close audio
-- Store Audio data like features in database
-- Load audio from youtube
-- Able to tell which song to pick from youtube
 
 ## Dependencies
 | Dependency  | Command |
