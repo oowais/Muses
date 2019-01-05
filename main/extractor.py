@@ -5,8 +5,8 @@ import numpy as np
 
 from datastructure.feature import Feature
 from datastructure.distance import Distance
-from util import sha256sum, get_name
-from thread import ThreadWithReturnValue
+from main.util import sha256sum, get_name
+from main.thread import ThreadWithReturnValue
 
 
 def _calculate_mfcc(y, sr):

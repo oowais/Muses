@@ -1,10 +1,10 @@
 import os
 import time
 
-from db import Db
-from util import sha256sum, scale, progress, sum_n
-from thread import ThreadWithReturnValue
-from extractor import get_all_features, get_distance
+from main.db import Db
+from main.util import sha256sum, scale, progress, sum_n
+from main.thread import ThreadWithReturnValue
+from main.extractor import get_all_features, get_distance
 
 # database_name = 'db.sqlite'
 database_name = 'test.sqlite'
