@@ -1,5 +1,6 @@
 import os
 import time
+from itertools import chain
 
 from main.db import Db
 from main.util import sha256sum, scale, progress, sum_n
@@ -99,12 +100,8 @@ def save_dist_to_db(db, ifeature, jfeature):
 def get_names_from_db():
     db = Db(storage_file=db_file)
     names_db = db.get_all_names()
-    names = []
-    for n in names_db:
-        if n[0] not in names:
-            names.append(n[0])
-        if n[1] not in names:
-            names.append(n[1])
+    tup_to_list = list(chain.from_iterable(names_db))
+    names = list(set(tup_to_list))
     return names
 
 
