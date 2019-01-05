@@ -6,8 +6,8 @@ import fastdtw
 import librosa
 from scipy.spatial.distance import euclidean
 
-from db import Db
-from extractor import get_all_features, get_distance
+from main.db import Db
+from main.extractor import get_all_features, get_distance
 
 database_name = 'db.sqlite'
 audio_folder_name = 'audio_resources'
