@@ -11,7 +11,7 @@ from core.extractor import get_all_features, get_distance
 
 class Main:
 
-    def __init__(self):
+    def __init__(self, db_name):
         """
         Constructor for Main class
 
@@ -21,8 +21,7 @@ class Main:
         db: database class object
         """
         # Go through README.md to see which database to use
-        # _database_name = 'db.sqlite'
-        _database_name = 'complete.sqlite'
+        _database_name = db_name
         _audio_folder_name = 'audio_resources'
         _root_dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
         _db_file = os.path.join(_root_dir_path, _database_name)
