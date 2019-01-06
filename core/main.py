@@ -1,5 +1,6 @@
 import os
 import time
+import sys
 from itertools import chain
 
 from core.db import Db
@@ -69,7 +70,11 @@ class Main:
         # save the distances in the distance table
         self._save_dist_to_db_new(distances=dist)
         print()
-        print('Done! Took %.2f seconds to complete' % (time.time() - start_time))
+        finish_time = time.time() - start_time
+        if finish_time > 120:
+            print('Done! Took %.2f minutes to complete' % (finish_time / 60))
+        else:
+            print('Done! Took %.2f seconds to complete' % finish_time)
 
     def calc_feature(self):
         """
@@ -241,7 +246,7 @@ class Main:
             while j < size:
                 jfile = file_list[j]
                 jfile_sha = sha256sum(os.path.join(self.audio_path, jfile))
-                if not self.db.is_hashes_present(ifile_sha, jfile_sha):
+                if ifile not in to_be_processed and not self.db.is_hashes_present(ifile_sha, jfile_sha):
                     to_be_processed.append(ifile)
                 curr_prog += 1
                 progress(scale(0, total_prog, curr_prog))
@@ -254,12 +259,10 @@ class Main:
         features = []
         total_prog = len(files)
         curr_prog = 0
-        progress(curr_prog)
         for file in files:
-            path = os.path.join(self.audio_path, file)
-            features.append(get_all_features(path))
+            progress(percent=scale(0, total_prog, curr_prog), name=file)
+            features.append(get_all_features(os.path.join(self.audio_path, file)))
             curr_prog += 1
-            progress(scale(0, total_prog, curr_prog))
         progress(1)
         return features
 
@@ -269,14 +272,13 @@ class Main:
         size = len(features)
         total_prog = sum_n(size)
         curr_prog = 0
-        progress(curr_prog)
         for i, ifeature in enumerate(features):
             j = i + 1
             while j < size:
                 jfeature = features[j]
+                progress(percent=scale(0, total_prog, curr_prog), name=ifeature.name + ' <==> ' + jfeature.name)
                 dist.append(get_distance(ifeature, jfeature))
                 curr_prog += 1
-                progress(scale(0, total_prog, curr_prog))
                 j += 1
         progress(1)
         return dist
@@ -287,6 +289,8 @@ class Main:
         curr_prog = 0
         progress(curr_prog)
         for dist in distances:
+            if self.db.is_hashes_present(dist.hash1, dist.hash2):
+                continue
             self.db.save_feature_distances(dist)
             curr_prog += 1
             progress(scale(0, total_prog, curr_prog))

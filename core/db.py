@@ -110,22 +110,19 @@ class Db:
             self.conn.commit()
             self.conn.close()
         except sqlite3.Error as e:
-            print("Error in adding data to table: " + str(e.args[0]))
             self.conn.close()
             return False
         return True
 
     def delete_tables(self):
         """
-        deletes all the database
+        deletes the database
         :return:
         """
-        delete_song_table = 'DROP TABLE ' + self.song_table
-        delete_feature_table = 'DROP TABLE ' + self.distance_table
+        delete_feature_table = 'DROP TABLE {}'.format(self.distance_table)
 
         try:
             self.open_connection(db_file=self.db_file)
-            self.cursor.execute(delete_song_table)
             self.cursor.execute(delete_feature_table)
             self.conn.commit()
             self.conn.close()

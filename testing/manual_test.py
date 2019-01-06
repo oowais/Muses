@@ -8,13 +8,28 @@ from scipy.spatial.distance import euclidean
 
 from core.db import Db
 from core.extractor import get_all_features, get_distance
-from core.util import scale
+from core.util import scale, sha256sum
 
 database_name = 'db.sqlite'
 audio_folder_name = 'audio_resources'
-root_dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__),'../'))
+root_dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
 db_file = os.path.join(root_dir_path, database_name)
 audio_path = os.path.join(root_dir_path, audio_folder_name)
+
+
+def is_hash_present_test():
+    name1 = 'classical4.mp3'
+    name2 = 'country6.mp3'
+    file1 = os.path.join(audio_path, name1)
+    file2 = os.path.join(audio_path, name2)
+
+    db = Db(storage_file=db_file)
+    sha1 = sha256sum(file1)
+    sha2 = sha256sum(file2)
+    if not db.is_hashes_present(sha1, sha2):
+        print('flase')
+    else:
+        print('true')
 
 
 def get_features_and_save_to_db_test():
@@ -127,4 +142,4 @@ def progress_loops_test():
 
 
 if __name__ == '__main__':
-    progress_loops_test()
+    is_hash_present_test()

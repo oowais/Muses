@@ -51,16 +51,17 @@ def sha256sum(filename):
     return h.hexdigest()
 
 
-def progress(percent, barlen=20):
+def progress(percent, barlen=20, name=''):
     """
     Shows progress bar in console
     :param percent: current percentage to show
     :param barlen: how much '=' signs to show in bar
+    :param name: name to be printed with progress bar
     :return:
     """
     # percent float from 0 to 1.
     sys.stdout.write("\r")  # removes the previous line
-    sys.stdout.write("[{:<{}}] {:.0f}%".format("=" * int(barlen * percent), barlen, percent * 100))
+    sys.stdout.write("[{:<{}}] {:.0f}% {}".format("=" * int(barlen * percent), barlen, percent * 100, name))
     sys.stdout.flush()
 
 
