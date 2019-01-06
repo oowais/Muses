@@ -38,7 +38,7 @@ def scale(rmin, rmax, val):
 
 def sha256sum(filename):
     """
-    Calculate sha of a file
+    Calculate SHA of a file
     :param filename:
     :return:
     """
@@ -52,11 +52,22 @@ def sha256sum(filename):
 
 
 def progress(percent, barlen=20):
+    """
+    Shows progress bar in console
+    :param percent: current percentage to show
+    :param barlen: how much '=' signs to show in bar
+    :return:
+    """
     # percent float from 0 to 1.
-    sys.stdout.write("\r")
+    sys.stdout.write("\r")  # removes the previous line
     sys.stdout.write("[{:<{}}] {:.0f}%".format("=" * int(barlen * percent), barlen, percent * 100))
     sys.stdout.flush()
 
 
 def sum_n(n):
+    """
+    Sum of n numbers
+    :param n: number whose sum is required
+    :return: sum
+    """
     return (n * (n - 1)) / 2

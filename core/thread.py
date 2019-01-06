@@ -1,7 +1,10 @@
 from threading import Thread
 
 
-class ThreadWithReturnValue(Thread):
+class StartThread(Thread):
+    """
+    Allows the join method to return value
+    """
     def __init__(self, group=None, target=None, name=None,
                  args=(), kwargs={}, Verbose=None):
         Thread.__init__(self, group, target, name, args, kwargs)

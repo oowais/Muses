@@ -6,8 +6,9 @@ import fastdtw
 import librosa
 from scipy.spatial.distance import euclidean
 
-from main.db import Db
-from main.extractor import get_all_features, get_distance
+from core.db import Db
+from core.extractor import get_all_features, get_distance
+from core.util import scale
 
 database_name = 'db.sqlite'
 audio_folder_name = 'audio_resources'
@@ -78,7 +79,7 @@ def progress(percent, barlen=20):
 
 
 def sum_n(n):
-    print((n * (n - 1)) / 2)
+    return (n * (n - 1)) / 2
 
 
 def mfcc_test():
@@ -107,5 +108,23 @@ def mfcc_test():
     print(dist1, dist2)
 
 
+def progress_loops_test():
+    progress(0)
+    size = 5
+    total_prog = sum_n(size)
+    print('total progress= ', total_prog)
+    curr_prog = 0
+    progress(curr_prog)
+    for i in range(size):
+        j = i + 1
+        while j < size:
+            curr_prog += 1
+            progress(scale(0, total_prog, curr_prog))
+            print('current: ', curr_prog)
+            sleep(.25)
+            j += 1
+    progress(1)
+
+
 if __name__ == '__main__':
-    mfcc_test()
+    progress_loops_test()

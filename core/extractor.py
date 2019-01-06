@@ -5,41 +5,30 @@ import numpy as np
 
 from datastructure.feature import Feature
 from datastructure.distance import Distance
-from main.util import sha256sum, get_name
-from main.thread import ThreadWithReturnValue
-
-
-def _calculate_mfcc(y, sr):
-    s = librosa.feature.melspectrogram(y=y, sr=sr)
-    log_s = librosa.amplitude_to_db(s)
-    return librosa.feature.mfcc(S=log_s)
-
-
-def _calculate_cqt(y, sr):
-    linear_cqt = np.abs(librosa.cqt(y=y, sr=sr)) ** 2
-    return librosa.amplitude_to_db(linear_cqt)
-
-
-def _calculate_pcp(y, sr):
-    pcp_cqt = np.abs(librosa.hybrid_cqt(y=y, sr=sr)) ** 2
-    return librosa.feature.chroma_cqt(C=pcp_cqt, sr=sr)
+from core.util import sha256sum, get_name
+from core.thread import StartThread
 
 
 def get_all_features(file):
+    """
+    Calculates different features of an audio and returns the Feature class object
+    :param file: audio files to be processed
+    :return: mfcc, cqt, chroma_stft, pcp, tonnetz, rhythm features
+    """
     name = get_name(file)
     y, sr = librosa.load(file)
 
-    mfcc_thread = ThreadWithReturnValue(target=_calculate_mfcc, args=(y, sr,))
+    mfcc_thread = StartThread(target=_calculate_mfcc, args=(y, sr,))
     mfcc_thread.start()
-    cqt_thread = ThreadWithReturnValue(target=_calculate_cqt, args=(y, sr,))
+    cqt_thread = StartThread(target=_calculate_cqt, args=(y, sr,))
     cqt_thread.start()
-    chroma_stft_thread = ThreadWithReturnValue(target=librosa.feature.chroma_stft, args=(y, sr,))
+    chroma_stft_thread = StartThread(target=librosa.feature.chroma_stft, args=(y, sr,))
     chroma_stft_thread.start()
-    pcp_thread = ThreadWithReturnValue(target=_calculate_pcp, args=(y, sr,))
+    pcp_thread = StartThread(target=_calculate_pcp, args=(y, sr,))
     pcp_thread.start()
-    tonnetz_thread = ThreadWithReturnValue(target=librosa.feature.tonnetz, args=(y, sr,))
+    tonnetz_thread = StartThread(target=librosa.feature.tonnetz, args=(y, sr,))
     tonnetz_thread.start()
-    rhythm_thread = ThreadWithReturnValue(target=librosa.feature.tempogram, args=(y, sr,))
+    rhythm_thread = StartThread(target=librosa.feature.tempogram, args=(y, sr,))
     rhythm_thread.start()
 
     hash_val = sha256sum(file)
@@ -58,6 +47,13 @@ def get_all_features(file):
 
 
 def get_distance(feature1, feature2):
+    """
+    Calculates teh DTW distances between the features using Euclidean method
+
+    :param feature1: feature
+    :param feature2: feature
+    :return: distance between the features
+    """
     dist_func = euclidean
 
     distance1, path1 = fastdtw.fastdtw(feature1.mfcc.T, feature2.mfcc.T, dist=dist_func)
@@ -72,3 +68,19 @@ def get_distance(feature1, feature2):
     return Distance(hash1=feature1.hash, hash2=feature2.hash, name1=feature1.name, name2=feature2.name,
                     mfcc_dist=distance1, cqt_dist=distance2, chroma_stft_dist=distance3,
                     pcp_dist=distance4, tonnetz_dist=distance5, rhythm_dist=distance6)
+
+
+def _calculate_mfcc(y, sr):
+    s = librosa.feature.melspectrogram(y=y, sr=sr)
+    log_s = librosa.amplitude_to_db(s)
+    return librosa.feature.mfcc(S=log_s)
+
+
+def _calculate_cqt(y, sr):
+    linear_cqt = np.abs(librosa.cqt(y=y, sr=sr)) ** 2
+    return librosa.amplitude_to_db(linear_cqt)
+
+
+def _calculate_pcp(y, sr):
+    pcp_cqt = np.abs(librosa.hybrid_cqt(y=y, sr=sr)) ** 2
+    return librosa.feature.chroma_cqt(C=pcp_cqt, sr=sr)

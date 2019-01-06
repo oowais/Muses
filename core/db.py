@@ -1,5 +1,4 @@
 import sqlite3
-import logging
 
 
 class Db:
@@ -10,14 +9,13 @@ class Db:
         ----------
         storage_file: location of db file in String
 
-         Attributes
+        Attributes
         ----------
         db_file : Location of database file
         feature_table: Name of features table
         song_table: Name of song table
 
         """
-        self.logger = logging.getLogger(__name__)
         self.db_file = storage_file
         self.open_connection(db_file=storage_file)
         self.distance_table = 'distance'
@@ -33,7 +31,7 @@ class Db:
             self.conn = sqlite3.connect(db_file, check_same_thread=False)
             self.cursor = self.conn.cursor()
         except sqlite3.Error as e:
-            self.logger.error(str(e))
+            print(str(e))
 
     def create_tables(self):
         """
@@ -60,7 +58,7 @@ class Db:
             self.conn.commit()
             self.conn.close()
         except sqlite3.Error as e:
-            self.logger.error("Error in creating table: " + str(e.args[0]))
+            print("Error in creating table: " + str(e.args[0]))
             self.conn.close()
             return False
         return True
@@ -112,12 +110,16 @@ class Db:
             self.conn.commit()
             self.conn.close()
         except sqlite3.Error as e:
-            self.logger.error("Error in adding data to table: " + str(e.args[0]))
+            print("Error in adding data to table: " + str(e.args[0]))
             self.conn.close()
             return False
         return True
 
     def delete_tables(self):
+        """
+        deletes all the database
+        :return:
+        """
         delete_song_table = 'DROP TABLE ' + self.song_table
         delete_feature_table = 'DROP TABLE ' + self.distance_table
 
@@ -128,7 +130,7 @@ class Db:
             self.conn.commit()
             self.conn.close()
         except sqlite3.Error as e:
-            self.logger.error("Error in deleting table: " + str(e.args[0]))
+            print("Error in deleting table: " + str(e.args[0]))
             self.conn.close()
             return False
         return True
@@ -147,7 +149,7 @@ class Db:
             song = self.cursor.fetchall()
             self.conn.close()
         except sqlite3.Error as e:
-            self.logger.error('Error in fetching song data', str(e.args[0]))
+            print('Error in fetching song data', str(e.args[0]))
             self.conn.close()
             return None
         return song
@@ -168,7 +170,7 @@ class Db:
             distances = self.cursor.fetchall()
             self.conn.close()
         except sqlite3.Error as e:
-            self.logger.error('Error in fetching from distance table', str(e.args[0]))
+            print('Error in fetching from distance table', str(e.args[0]))
             self.conn.close()
             return None
         if len(distances) > 0:
@@ -188,7 +190,7 @@ class Db:
             value = self.cursor.fetchall()
             self.conn.close()
         except sqlite3.Error as e:
-            self.logger.error('Error in fetching number of rows in distance table', str(e.args[0]))
+            print('Error in fetching number of rows in distance table', str(e.args[0]))
             self.conn.close()
             return None
         return value
@@ -211,7 +213,7 @@ class Db:
                 distance = self.cursor.fetchall()
             self.conn.close()
         except sqlite3.Error as e:
-            self.logger.error('Error in fetching from distance table', str(e.args[0]))
+            print('Error in fetching from distance table', str(e.args[0]))
             self.conn.close()
             return None
         return distance
@@ -230,7 +232,7 @@ class Db:
             distances = self.cursor.fetchall()
             self.conn.close()
         except sqlite3.Error as e:
-            self.logger.error('Error in fetching distances from extreme distance table', str(e.args[0]))
+            print('Error in fetching distances from extreme distance table', str(e.args[0]))
             self.conn.close()
             return None
         return distances
@@ -246,7 +248,7 @@ class Db:
             names = self.cursor.fetchall()
             self.conn.close()
         except sqlite3.Error as e:
-            self.logger.error('Error in fetching names from extreme distance table', str(e.args[0]))
+            print('Error in fetching names from extreme distance table', str(e.args[0]))
             self.conn.close()
             return None
         return names
