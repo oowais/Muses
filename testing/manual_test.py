@@ -12,7 +12,7 @@ from core.util import scale
 
 database_name = 'db.sqlite'
 audio_folder_name = 'audio_resources'
-root_dir_path = os.path.abspath(os.path.dirname(__file__))
+root_dir_path = os.path.abspath(os.path.join(os.path.dirname(__file__),'../'))
 db_file = os.path.join(root_dir_path, database_name)
 audio_path = os.path.join(root_dir_path, audio_folder_name)
 
