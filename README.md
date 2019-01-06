@@ -6,7 +6,7 @@ Comparing audio using LSH and mfcc and more
 
 ## Run
 ### Run with your audio
-- Change the `database_name` from test.sqlite to anything else as per your liking (eg: db.sqlite) in `main.py` class
+- Change the `database_name` from complete.sqlite to anything else as per your liking (eg: db.sqlite) in `main.py` class
 in 'core' folder
 - **Make sure the database file with the same name does not exist in root folder of project**
 - Add audio files to `audio_resources` folder whose similarity you wish to find
@@ -14,7 +14,7 @@ in 'core' folder
 
 ### Run with existing data in database
 - Make sure `audio_resources` folder is empty
-- Make sure the `database_name` is test.db in `main.py` class in 'core' folder
+- Make sure the `database_name` is complete.db in `main.py` class in 'core' folder
 - Run `python3 runner.py` from root of project
 
 >You might have to add sudo depending on the configuration of your system
