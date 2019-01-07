@@ -52,10 +52,8 @@ Error should be resolved now.
 ## Dependencies
 | Dependency  | Command |
 | :-----------: | :------- |
-| Librosa | `pip install librosa`  |
-| matplotlib  | `pip install matplotlib`  |
-| Dtw | `pip install dtw` or<br/> `python -m pip install dtw` |
-| fastdtw | `pip install fastdtw` |
+| Librosa | `pip3 install librosa`  |
+| fastdtw | `pip3 install fastdtw` |
 
 Other dependencies should be installed automatically, if some error occurs with missing dependency, try installing it with  
 `pip install module-name`
