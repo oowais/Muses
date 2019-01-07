@@ -160,6 +160,10 @@ class Main:
         names = self._get_names_from_db()
         factors = self.db.get_all_distances()
 
+        if len(factors) == 0:
+            print('Nothing to show')
+            return
+
         sum_list = []
         for fact in factors:
             sum_list.append(fact[2] + fact[3] + fact[4] + fact[5] + fact[6] + fact[7])
@@ -224,7 +228,7 @@ class Main:
     def _get_files_from_folder(self):
         file_list = []
         for file in os.listdir(self.audio_path):
-            if file.endswith('.mp3'):
+            if file.endswith('.mp3') or file.endswith('.wav'):
                 file_list.append(file)
         return file_list, len(file_list)
 
