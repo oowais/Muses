@@ -13,7 +13,7 @@ runner.py takes an argument as the name of database
 
 ### Run with existing data in database
 - Make sure `audio_resources` folder is empty
-- Run `python3 runner.py complete.sqlite` from root of project
+- Run `python3 runner.py MDB.sqlite` from root of project
 
 >You might have to add sudo depending on the configuration of your system
 
