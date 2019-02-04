@@ -159,6 +159,10 @@ class Main:
         """
         names = self._get_names_from_db()
         factors = self.db.get_all_distances()
+        
+        if factors == None:
+            print('Audio_resources folder and the database is empty!')
+            return
 
         if len(factors) == 0:
             print('Nothing to show')
