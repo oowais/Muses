@@ -167,7 +167,8 @@ class Main:
         if len(factors) == 0:
             print('Nothing to show')
             return
-
+        
+        names.sort()
         sum_list = []
         for fact in factors:
             sum_list.append(fact[2] + fact[3] + fact[4] + fact[5] + fact[6] + fact[7])
