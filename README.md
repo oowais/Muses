@@ -1,5 +1,5 @@
-# Audio-Comparison
-Calculating audio features like mfcc, rhythm and more and then calculating their distance between them using DTW.
+# Muses
+Audio Recommendedation System; Calculating audio features like mfcc, rhythm and more and then calculating their distance between them using DTW.
 
 ## Setup
 `pip3 install -r requirements.txt`
