@@ -177,7 +177,7 @@ class Main:
 
         while True:
             print()
-            # Printing name of files from the folder
+            # Printing name of files from the database
             for i, name in enumerate(names):
                 print(' %-30s ' % (str(i + 1) + '. ' + name), end='')
                 if (i + 1) % 3 == 0:
@@ -199,7 +199,8 @@ class Main:
             print()
             selected_track = names[val - 1]
 
-            print('Similarity measure with ', selected_track)
+            print('Top 10 tracks closer to ', selected_track, ' are:')
+            # print('Similarity measure with ', selected_track)
             result = []
             for index, factor in enumerate(factors):
                 scaled_sum = scale(rmin=min_val, rmax=max_val, val=sum_list[index])
@@ -210,8 +211,11 @@ class Main:
 
             # Sorting the list according to maximum distance
             result.sort(key=lambda tup: tup[1], reverse=True)
-            for val in result:
-                print('%-30s - %.1f %%' % (val[0], val[1]))
+            for ind, val in enumerate(result):
+                # Printing top 10 results
+                if ind is 10:
+                    break
+                print('%2d. %-30s - %.1f %%' % (ind+1, val[0], val[1]))
             print('-------------------------------------------------')
             x = input('Press Enter to continue or 0 to exit...')
             if x == '0':
