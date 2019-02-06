@@ -200,7 +200,7 @@ class Main:
             print()
             selected_track = names[val - 1]
 
-            print('Top 10 tracks closer to ', selected_track, ' are:')
+            print('Top 10 tracks closest to:', selected_track, ' are:')
             # print('Similarity measure with ', selected_track)
             result = []
             for index, factor in enumerate(factors):
